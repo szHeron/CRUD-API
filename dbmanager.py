@@ -27,12 +27,3 @@ def listProducts():
   cursor.execute("SELECT JSON_OBJECT('id', id, 'name', name, 'section', section, 'price', price, 'available', available) FROM products")
   products = cursor.fetchall()
   return products
-
-"""
-CREATE TABLE rooms(
-  id INT PRIMARY KEY AUTO_INCREMENT, 
-  floor INT(3) NOT NULL, 
-  daily_price DECIMAL(4,2) DEFAULT 50.00, 
-  busy BOOLEAN DEFAULT 0
-)
-"""
