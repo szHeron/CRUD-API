@@ -22,8 +22,9 @@ def checkExistsTable():
 def addNewProduct(name, section, price, available):
   cursor.execute("INSERT INTO products (name, section, price, available) VALUES(%s, %s, %s, %s)", (name, section, price, available))
   mydb.commit()
+  return cursor.lastrowid
 
-def listProducts(id = -1):
+def getProducts(id):
   if id > 0:
     cursor.execute("SELECT JSON_OBJECT('id', id, 'name', name, 'section', section, 'price', price, 'available', available) FROM products WHERE id = {}".format(id))
     return cursor.fetchone()
@@ -32,9 +33,16 @@ def listProducts(id = -1):
     return cursor.fetchall()
 
 def delProduct(id):
-  cursor.execute("DELETE FROM products WHERE id = %s", (id))
+  cursor.execute("DELETE FROM products WHERE id = %s", (id,))
   mydb.commit()
 
-def updateProduct(id):
-  cursor.execute("UPDATE products SET name WHERE id = {}".format(id))
+def updateProduct(id, new):
+  if new['name']:
+    cursor.execute("UPDATE products SET name = %s WHERE id = %s", (new['name'], id,))
+  if new['section']:
+    cursor.execute("UPDATE products SET section = %s WHERE id = %s", (new['section'], id,))
+  if new['price']:
+    cursor.execute("UPDATE products SET price = %s WHERE id = %s", (new['price'], id,))
+  if new['available']:
+    cursor.execute("UPDATE products SET available = %s WHERE id = %s", (new['available'], id,))
   mydb.commit()
